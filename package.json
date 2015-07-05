@@ -1,0 +1,29 @@
+{
+  "name": "monfig",
+  "version": "1.0.0",
+  "description": "Build configs recursively",
+  "main": "dist/monfig.js",
+  "scripts": {
+    "test": "mocha --compilers=js:babel/register ./tests/spec/"
+  },
+  "keywords": [
+    "config",
+    "build"
+  ],
+  "author": "Jørn Andre Tangen @gorillatron",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^2.9.32",
+    "lodash": "^3.10.0"
+  },
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "chai": "^3.0.0",
+    "chai-as-promised": "^5.1.0",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-rimraf": "^0.1.1",
+    "mocha": "^2.2.5"
+  }
+}
