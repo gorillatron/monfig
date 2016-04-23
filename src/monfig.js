@@ -19,7 +19,7 @@ const afs = Promise.promisifyAll(fs)
  * @param options.env:String
  * @returns Object
 */
-export async function build( options = {env: 'development', basePath: '../config'}) {
+export async function build(options = {env: 'development', basePath: '../config'}) {
   let [baseConfig, envConfig, localConfig] =
     await Promise.all([buildBaseConfig(options), buildEnvConfig(options), buildLocalConfig(options)])
 
@@ -107,9 +107,13 @@ async function requireConfig(configPath) {
     }
 
     if(typeof configFactory !== "function") {
+
       console.warn("export from config factory not function")
-      console.warn("config: " + configPath)
       console.warn("export either 'default' or 'factory'")
+      console.warn("returning empty object for config:")
+      console.warn(configPath)
+
+      return {}
     }
 
     let config = await configFactory()
@@ -117,7 +121,9 @@ async function requireConfig(configPath) {
 
   }
   catch(exception) {
-    console.warn('no config at:', configPath)
+    console.error(exception)
+    console.warn("returning empty object for config:")
+    console.warn(configPath)
     return {}
   }
 }
