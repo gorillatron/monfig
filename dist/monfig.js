@@ -26,9 +26,9 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
-var _lodashMerge = require('lodash/merge');
+var _lodashObjectMerge = require('lodash/object/merge');
 
-var _lodashMerge2 = _interopRequireDefault(_lodashMerge);
+var _lodashObjectMerge2 = _interopRequireDefault(_lodashObjectMerge);
 
 var afs = _bluebird2['default'].promisifyAll(_fs2['default']);
 
@@ -42,7 +42,7 @@ var afs = _bluebird2['default'].promisifyAll(_fs2['default']);
 */
 
 function build() {
-  var options = arguments[0] === undefined ? { env: 'development', basePath: '../config' } : arguments[0];
+  var options = arguments.length <= 0 || arguments[0] === undefined ? { env: 'development', basePath: '../config' } : arguments[0];
 
   var _ref, _ref2, baseConfig, envConfig, localConfig, config;
 
@@ -58,7 +58,7 @@ function build() {
         baseConfig = _ref2[0];
         envConfig = _ref2[1];
         localConfig = _ref2[2];
-        config = (0, _lodashMerge2['default'])(baseConfig, envConfig, localConfig);
+        config = (0, _lodashObjectMerge2['default'])(baseConfig, envConfig, localConfig);
         return context$1$0.abrupt('return', _bluebird2['default'].resolve(config));
 
       case 9:
@@ -228,25 +228,36 @@ function requireConfig(configPath) {
       case 0:
         context$1$0.prev = 0;
         configFactory = require(configPath);
-        context$1$0.next = 4;
+
+        if (typeof configFactory === "object") {
+          configFactory = configFactory['default'] || configFactory.factory;
+        }
+
+        if (typeof configFactory !== "function") {
+          console.warn("export from config factory not function");
+          console.warn("config: " + configPath);
+          console.warn("export either 'default' or 'factory'");
+        }
+
+        context$1$0.next = 6;
         return regeneratorRuntime.awrap(configFactory());
 
-      case 4:
+      case 6:
         config = context$1$0.sent;
         return context$1$0.abrupt('return', config);
 
-      case 8:
-        context$1$0.prev = 8;
+      case 10:
+        context$1$0.prev = 10;
         context$1$0.t0 = context$1$0['catch'](0);
 
         console.warn('no config at:', configPath);
         return context$1$0.abrupt('return', {});
 
-      case 12:
+      case 14:
       case 'end':
         return context$1$0.stop();
     }
-  }, null, this, [[0, 8]]);
+  }, null, this, [[0, 10]]);
 }
 
 /**
@@ -256,5 +267,5 @@ function requireConfig(configPath) {
  * @returns Boolean
 */
 function filterNonBaseConfigFiles(fileName) {
-  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match('locals');
+  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match("locals");
 }

@@ -99,9 +99,22 @@ async function buildLocalConfig(options) {
 */
 async function requireConfig(configPath) {
   try {
+
     let configFactory = require(configPath)
+
+    if(typeof configFactory === "object") {
+      configFactory = configFactory.default || configFactory.factory
+    }
+
+    if(typeof configFactory !== "function") {
+      console.warn("export from config factory not function")
+      console.warn("config: " + configPath)
+      console.warn("export either 'default' or 'factory'")
+    }
+
     let config = await configFactory()
     return config
+
   }
   catch(exception) {
     console.warn('no config at:', configPath)
