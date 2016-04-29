@@ -1,6 +1,10 @@
 # monfig
 Environment aware, asynchronous, folder based config building for Nodejs
 
+```
+npm install monfig
+```
+
 ### API
 This package is basically the way [Sails.js](http://sailsjs.org/) does its configuration.
 See their docs to get a more in depth look at how the folder structure and naming decides the config objects structure.
