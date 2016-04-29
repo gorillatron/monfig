@@ -17,11 +17,13 @@ describe('monfig', () => {
     it('should merge configs like this', () => {
 
       let dev = build({
+        debug: true,
         env: 'development',
         basePath: path.join(__dirname, '../test_config_fs/merge')
       })
 
       let prod = build({
+        debug: true,
         env: 'production',
         basePath: path.join(__dirname, '../test_config_fs/merge')
       })

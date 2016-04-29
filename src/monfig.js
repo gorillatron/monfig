@@ -6,8 +6,10 @@ import Promise  from 'bluebird'
 import fs       from 'fs'
 import path     from 'path'
 import merge    from 'lodash/object/merge'
+import colors    from 'colors'
 
 
+const monfigLogPrompt = `[${("monfig").green}]`
 const afs = Promise.promisifyAll(fs)
 
 
@@ -19,13 +21,20 @@ const afs = Promise.promisifyAll(fs)
  * @param options.env:String
  * @returns Object
 */
-export async function build(options = {env: 'development', basePath: './config'}) {
+export async function build(options = {env: 'development', basePath: './config', debug: false}) {
+  options.debug && console.info(`${monfigLogPrompt} ${'starting build on basePath:'.gray} ${options.basePath}`)
+
   let [baseConfig, envConfig, localConfig] =
     await Promise.all([buildBaseConfig(options), buildEnvConfig(options), buildLocalConfig(options)])
 
   let config = merge(baseConfig, envConfig, localConfig)
 
-  return Promise.resolve(config)
+  if(options.debug) {
+    console.info(`${monfigLogPrompt} ${'built config:'.gray}`)
+    console.info(config)
+  }
+
+  return config
 }
 
 
@@ -38,29 +47,23 @@ export async function build(options = {env: 'development', basePath: './config'}
  * @returns Promise<Object>
 */
 async function buildBaseConfig(options) {
-  let config = {}
-  let error = null
+  const configFiles =
+    (await afs.readdirAsync(options.basePath))
+    .filter(filterNonBaseConfigFiles)
 
-  let configFiles = await afs.readdirAsync(options.basePath)
+  const configs = await Promise.reduce(configFiles,
+    async function(configs, fileName) {
 
-  configFiles = configFiles.filter(filterNonBaseConfigFiles)
+      var configKeyName = fileName.replace('.js', '')
+      var config = await requireConfig(path.join(options.basePath, fileName), options)
 
-  for(let fileName of configFiles) {
-    try {
+      return {
+        ...configs,
+        [configKeyName]: config}
 
-      let configFactory = require(path.join(options.basePath, fileName))
-      config[fileName.replace('.js', '')] = await configFactory()
+    }, {})
 
-    }
-    catch(exception) {
-      error = exception
-    }
-  }
-
-  return new Promise((resolve, reject) => {
-    return error ? reject(error) :
-                   resolve(config)
-  })
+  return configs
 }
 
 
@@ -73,7 +76,7 @@ async function buildBaseConfig(options) {
  * @returns Promise<Object>
 */
 async function buildEnvConfig(options) {
-  return requireConfig(path.join(options.basePath, '/env/', `${options.env}.js`))
+  return requireConfig(path.join(options.basePath, '/env/', `${options.env}.js`), options)
 }
 
 
@@ -86,7 +89,7 @@ async function buildEnvConfig(options) {
  * @returns Promise<Object>
 */
 async function buildLocalConfig(options) {
-  return requireConfig(path.join(options.basePath, 'locals.js'))
+  return requireConfig(path.join(options.basePath, 'locals.js'), options)
 }
 
 
@@ -97,8 +100,10 @@ async function buildLocalConfig(options) {
  * @param configPath:String - absolute path for config module
  * @returns Promise<Object>
 */
-async function requireConfig(configPath) {
+async function requireConfig(configPath, options) {
   try {
+
+    options.debug && console.info(`${monfigLogPrompt} ${'require config:'.gray} ${configPath}`)
 
     let configFactory = require(configPath)
 
@@ -107,12 +112,7 @@ async function requireConfig(configPath) {
     }
 
     if(typeof configFactory !== 'function') {
-
-      console.warn('export from config factory not function')
-      console.warn('export either "default" or "factory"')
-      console.warn('returning empty object for config:')
-      console.warn(configPath)
-
+      options.debug && warnInvalidConfigFactory(configPath)
       return {}
     }
 
@@ -121,13 +121,42 @@ async function requireConfig(configPath) {
 
   }
   catch(exception) {
-    console.error(exception)
-    console.warn('returning empty object for config:')
-    console.warn(configPath)
+    options.debug && warnConfigFactoryException(exception, configPath)
     return {}
   }
 }
 
+/**
+ * Warn of invalid config
+ * @private
+ * @param configPath:String
+ * @returns Void 0
+*/
+function warnInvalidConfigFactory(configPath) {
+  console.warn(`
+    ${monfigLogPrompt} Invalid config factory at: ${configPath}
+    ${monfigLogPrompt} Export either "default" or "factory" from config.
+    ${monfigLogPrompt} Returning empty object
+  `)
+}
+
+
+/**
+ * Warn of exception in config
+ * @private
+ * @param exception:Error
+ * @param configPath:String
+ * @returns Void 0
+*/
+function warnConfigFactoryException(exception, configPath) {
+  console.warn(`
+    ${monfigLogPrompt} Invalid config factory at: ${configPath}
+    ${monfigLogPrompt} Threw exception.
+    ${monfigLogPrompt} Returning empty object.
+    ${monfigLogPrompt} Logging exception:
+  `)
+  console.error(exception)
+}
 
 /**
  * Filter non js files, folders and the local.js conf
