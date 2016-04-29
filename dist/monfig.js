@@ -42,7 +42,7 @@ var afs = _bluebird2['default'].promisifyAll(_fs2['default']);
 */
 
 function build() {
-  var options = arguments.length <= 0 || arguments[0] === undefined ? { env: 'development', basePath: '../config' } : arguments[0];
+  var options = arguments.length <= 0 || arguments[0] === undefined ? { env: 'development', basePath: './config' } : arguments[0];
 
   var _ref, _ref2, baseConfig, envConfig, localConfig, config;
 
