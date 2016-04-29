@@ -30,7 +30,7 @@ build({ basePath: "./config", env: process.env.NODE_ENV })
 ```javascript
 import fetch from 'isomorphic-fetch'
 
-export default async function foo() {
+export default async function factory() {
   const response = await fetch('192.168.1.13:1337/foo.json')
   response == {
     "bar": "lol"
@@ -52,4 +52,3 @@ export default async function init() {
   }
 }
 ```
-
