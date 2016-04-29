@@ -32,9 +32,9 @@ import fetch from 'isomorphic-fetch'
 
 export default async function factory() {
   const response = await fetch('192.168.1.13:1337/foo.json')
-  response == {
-    "bar": "lol"
-  }
+  // response == {
+  //   "bar": "lol"
+  // }
   return response.json()
 }
 ```
@@ -45,10 +45,10 @@ import {build} from "monfig"
 
 export default async function init() {
   const config = await build({ basePath: "./config", env: process.env.NODE_ENV })
-  config == {
-    "foo": {
-      "bar": "lol"
-    }
-  }
+  // config == {
+  //   "foo": {
+  //     "bar": "lol"
+  //   }
+  // }
 }
 ```
