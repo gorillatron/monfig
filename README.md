@@ -44,7 +44,7 @@ app.js
 import {build} from "monfig"
 
 export default async function init() {
-  const config = build({ basePath: "./config", env: process.env.NODE_ENV })
+  const config = await build({ basePath: "./config", env: process.env.NODE_ENV })
   config == {
     "foo": {
       "bar": "lol"
