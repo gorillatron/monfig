@@ -19,7 +19,7 @@ const afs = Promise.promisifyAll(fs)
  * @param options.env:String
  * @returns Object
 */
-export async function build(options = {env: 'development', basePath: '../config'}) {
+export async function build(options = {env: 'development', basePath: './config'}) {
   let [baseConfig, envConfig, localConfig] =
     await Promise.all([buildBaseConfig(options), buildEnvConfig(options), buildLocalConfig(options)])
 
