@@ -2,10 +2,10 @@
 /**
  * Import
 */
-import Promise  from 'bluebird';
-import fs       from 'fs';
-import path     from 'path';
-import merge    from 'lodash/object/merge';
+import Promise  from 'bluebird'
+import fs       from 'fs'
+import path     from 'path'
+import merge    from 'lodash/object/merge'
 
 
 const afs = Promise.promisifyAll(fs)
@@ -102,15 +102,15 @@ async function requireConfig(configPath) {
 
     let configFactory = require(configPath)
 
-    if(typeof configFactory === "object") {
+    if(typeof configFactory === 'object') {
       configFactory = configFactory.default || configFactory.factory
     }
 
-    if(typeof configFactory !== "function") {
+    if(typeof configFactory !== 'function') {
 
-      console.warn("export from config factory not function")
-      console.warn("export either 'default' or 'factory'")
-      console.warn("returning empty object for config:")
+      console.warn('export from config factory not function')
+      console.warn('export either "default" or "factory"')
+      console.warn('returning empty object for config:')
       console.warn(configPath)
 
       return {}
@@ -122,7 +122,7 @@ async function requireConfig(configPath) {
   }
   catch(exception) {
     console.error(exception)
-    console.warn("returning empty object for config:")
+    console.warn('returning empty object for config:')
     console.warn(configPath)
     return {}
   }
@@ -136,5 +136,5 @@ async function requireConfig(configPath) {
  * @returns Boolean
 */
 function filterNonBaseConfigFiles(fileName) {
-  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match("locals")
+  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match('locals')
 }

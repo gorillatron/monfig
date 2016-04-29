@@ -1,0 +1,31 @@
+{
+  "env": {
+      "browser": false,
+      "node": true,
+      "es6": true
+  },
+  "plugins": ["babel"],
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "parserOptions": {
+      "sourceType": "module"
+  },
+  "rules": {
+      "indent": [
+          "error",
+          2
+      ],
+      "quotes": [
+          "error",
+          "single"
+      ],
+      "semi": [
+          "error",
+          "never"
+      ],
+      "no-console":[
+        "error",
+        { "allow": ["warn", "error"] }
+      ]
+  }
+}
