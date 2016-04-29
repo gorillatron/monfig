@@ -13,14 +13,14 @@ import {build} from "monfig"
 
 build({ basePath: "./config", env: process.env.NODE_ENV })
   .then((config) => {
-    config == {
-      "reddis": {
-        "url": "productionurl"
-      },
-      "facebook": {
-        "apikey": "prodkey"
-      }
-    }
+    // config == {
+    //   "reddis": {
+    //     "url": "productionurl"
+    //   },
+    //   "facebook": {
+    //     "apikey": "prodkey"
+    //   }
+    // }
   })
 ```
 
