@@ -136,5 +136,8 @@ async function requireConfig(configPath) {
  * @returns Boolean
 */
 function filterNonBaseConfigFiles(fileName) {
-  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match('locals')
+  return fileName[0] !== '.' &&
+         fileName[0] !== '..' &&
+         fileName.match('.js') &&
+         !fileName.match('locals')
 }
