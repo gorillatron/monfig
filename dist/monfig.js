@@ -229,35 +229,44 @@ function requireConfig(configPath) {
         context$1$0.prev = 0;
         configFactory = require(configPath);
 
-        if (typeof configFactory === "object") {
+        if (typeof configFactory === 'object') {
           configFactory = configFactory['default'] || configFactory.factory;
         }
 
-        if (typeof configFactory !== "function") {
-          console.warn("export from config factory not function");
-          console.warn("config: " + configPath);
-          console.warn("export either 'default' or 'factory'");
+        if (!(typeof configFactory !== 'function')) {
+          context$1$0.next = 9;
+          break;
         }
 
-        context$1$0.next = 6;
+        console.warn('export from config factory not function');
+        console.warn('export either "default" or "factory"');
+        console.warn('returning empty object for config:');
+        console.warn(configPath);
+
+        return context$1$0.abrupt('return', {});
+
+      case 9:
+        context$1$0.next = 11;
         return regeneratorRuntime.awrap(configFactory());
 
-      case 6:
+      case 11:
         config = context$1$0.sent;
         return context$1$0.abrupt('return', config);
 
-      case 10:
-        context$1$0.prev = 10;
+      case 15:
+        context$1$0.prev = 15;
         context$1$0.t0 = context$1$0['catch'](0);
 
-        console.warn('no config at:', configPath);
+        console.error(context$1$0.t0);
+        console.warn('returning empty object for config:');
+        console.warn(configPath);
         return context$1$0.abrupt('return', {});
 
-      case 14:
+      case 21:
       case 'end':
         return context$1$0.stop();
     }
-  }, null, this, [[0, 10]]);
+  }, null, this, [[0, 15]]);
 }
 
 /**
@@ -267,5 +276,5 @@ function requireConfig(configPath) {
  * @returns Boolean
 */
 function filterNonBaseConfigFiles(fileName) {
-  return fileName[0] !== '.' && fileName.match('.js') && !fileName.match("locals");
+  return fileName[0] !== '.' && fileName[0] !== '..' && fileName.match('.js') && !fileName.match('locals');
 }

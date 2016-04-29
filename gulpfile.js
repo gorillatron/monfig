@@ -25,5 +25,5 @@ gulp.task('build', ['clean'], function() {
   return gulp.src(src, {read: true})
     .pipe(babel(babelconf))
     .pipe(concat('monfig.js') )
-    .pipe(gulp.dest(dest));
+    .pipe(gulp.dest(dest))
 })
