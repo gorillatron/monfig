@@ -1,7 +1,7 @@
 {
   "name": "monfig",
-  "version": "1.0.23",
-  "description": "Build configs recursively",
+  "version": "1.0.24",
+  "description": "Environment aware, asynchronous, folder based config building for node.",
   "main": "dist/monfig.js",
   "scripts": {
     "test": "mocha --compilers=js:babel/register ./tests/spec/"
