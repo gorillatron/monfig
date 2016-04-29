@@ -1,5 +1,5 @@
 # monfig
-Environment aware, asynchronous, folder based config building
+Environment aware, asynchronous, folder based config building for Nodejs
 
 ### API
 This package is basically the way [Sails.js](http://sailsjs.org/) does its configuration.
